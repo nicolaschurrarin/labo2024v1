@@ -11,7 +11,7 @@ prueba<-"es una prueba para el comitt"
 # cargo el dataset
 # dataset <- fread("./exp/KA2001/K101_001.csv")
 
-directorio<-("./exp/KA2001")
+directorio<-("~/buckets/b1/exp/KA2001")
 
 archivos <- list.files(directorio, pattern = "*csv", full.names = TRUE)
 
