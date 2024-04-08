@@ -111,15 +111,14 @@ tb_grid_search <- data.table(
                               min_bucket = numeric(),
                               max_depth = integer(),
                               min_split = integer(),
-                              ganancia_promedio = numeric() 
-                            )
+                              ganancia_promedio = numeric() )
 
 
 # itero por los loops anidados para cada hiperparametro
-for(vcp in c(-0.5)){
- for (vmax_depth in c(4, 6, 8, 10, 12, 14)) {
-  for (vmin_split in c(1000, 700, 500, 300, 200, 100, 50, 20, 10)) {
-    for (vmin_bucket in c(2,4,8,16,21,vmin_split/4)){        
+for(vcp in c(-1)){
+ for (vmax_depth in c(4)) {
+  for (vmin_split in c(400)) {
+    for (vmin_bucket in c(vmin_split/4)){        
           # vminsplit  minima cantidad de registros en un nodo para hacer el split
           param_basicos <- list(
             "cp" = vcp, # complejidad minima
@@ -144,7 +143,7 @@ for(vcp in c(-0.5)){
         fwrite( tb_grid_search,
                 file = archivo_salida,
                 sep = "\t" )
-      }
+ 
+       }
     }
-  cat("====PROCESO FINALIZADO","\n")
 }
