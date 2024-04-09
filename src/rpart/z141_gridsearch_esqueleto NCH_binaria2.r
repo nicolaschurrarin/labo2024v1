@@ -59,7 +59,7 @@ ArbolEstimarGanancia <- function(semilla, param_basicos) {
   ganancia_test <- dataset[
     fold == 2,
     sum(ifelse(prediccion[, "pos"] > 0.025,
-      ifelse(clase_ternaria == "pos", 117000, -3000),
+      ifelse(clase_binaria1 == "pos", 117000, -3000),
       0
     ))
   ]
