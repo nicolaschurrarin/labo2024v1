@@ -12,7 +12,8 @@ require("parallel")
 PARAM <- list()
 # reemplazar por las propias semillas
 PARAM$semillas <- c(300007, 600073, 100069, 750083, 750029)
-
+#prueba de semillas de elizabeth
+PARAM$semillas <- c(127291, 288679, 564521, 731731, 859433)
 #------------------------------------------------------------------------------
 # particionar agrega una columna llamada fold a un dataset
 #  que consiste en una particion estratificada segun agrupa
@@ -103,7 +104,7 @@ dataset <- dataset[clase_ternaria != ""]
 # HT  representa  Hiperparameter Tuning
 dir.create("./exp/", showWarnings = FALSE)
 dir.create("./exp/HT2020/", showWarnings = FALSE)
-archivo_salida <- "./exp/HT2020/gridsearch_testelizabeth.txt"
+archivo_salida <- "./exp/HT2020/gridsearch_testelizabethconsussemillas.txt"
 
 # genero la data.table donde van los resultados del Grid Search
 tb_grid_search <- data.table( 
