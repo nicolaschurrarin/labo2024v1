@@ -14,9 +14,9 @@ require("ParamHelpers")
 envg <- env()
 
 envg$EXPENV <- list()
-envg$EXPENV$exp_dir <- "~/buckets/b1/exp/flow3/"
-envg$EXPENV$wf_dir <- "~/buckets/b1/flow3/"
-envg$EXPENV$wf_dir_local <- "~/flow3/"
+envg$EXPENV$exp_dir <- "~/buckets/b1/exp/flow4/"
+envg$EXPENV$wf_dir <- "~/buckets/b1/flow4/"
+envg$EXPENV$wf_dir_local <- "~/flow4/"
 envg$EXPENV$repo_dir <- "~/labo2024v1/"
 envg$EXPENV$datasets_dir <- "~/buckets/b1/datasets/"
 envg$EXPENV$arch_sem <- "mis_semillas.txt"
@@ -64,7 +64,7 @@ DT_incorporar_dataset_default <- function( pmyexp, parch, pserver="local")
   if( -1 == (param_local <- exp_init_datos( pmyexp, parch, pserver ))$resultado ) return( 0 )# linea fija
   
   
-  param_local$meta$script <- "/src/workflow-03/z511_DT_incorporar_dataset.r"
+  param_local$meta$script <- "/src/workflow-04/z511_DT_incorporar_dataset.r"
   
   param_local$primarykey <- c("numero_de_cliente", "foto_mes" )
   param_local$entity_id <- c("numero_de_cliente" )
@@ -84,7 +84,7 @@ CA_catastrophe_default <- function( pmyexp, pinputexps, pserver="local")
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
   
   
-  param_local$meta$script <- "/src/workflow-03/z521_CA_reparar_dataset.r"
+  param_local$meta$script <- "/src/workflow-04/z521_CA_reparar_dataset.r"
   
   # Opciones MachineLearning EstadisticaClasica Ninguno
   param_local$metodo <- "MachineLearning" # MachineLearning EstadisticaClasica Ninguno
@@ -104,7 +104,7 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
   
   
-  param_local$meta$script <- "/src/workflow-03/z531_DR_corregir_drifting.r"
+  param_local$meta$script <- "/src/workflow-04/z531_DR_corregir_drifting.r"
   
   # No me engraso las manos con Feature Engineering manual
   param_local$variables_intrames <- FALSE
@@ -125,7 +125,7 @@ FE_historia_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
   
   
-  param_local$meta$script <- "/src/workflow-03/z541_FE_historia.r"
+  param_local$meta$script <- "/src/workflow-04/z541_FE_historia.r"
   
   param_local$lag1 <- TRUE
   param_local$lag2 <- FALSE # no me engraso con los lags de orden 2
@@ -177,7 +177,7 @@ TS_strategy_guantesblancos_202109 <- function( pmyexp, pinputexps, pserver="loca
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
   
-  param_local$meta$script <- "/src/workflow-03/z551_TS_training_strategy.r"
+  param_local$meta$script <- "/src/workflow-04/z551_TS_training_strategy.r"
   
   
   param_local$future <- c(202109)
@@ -205,7 +205,7 @@ TS_strategy_guantesblancos_202107 <- function( pmyexp, pinputexps, pserver="loca
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
   
-  param_local$meta$script <- "/src/workflow-03/z551_TS_training_strategy.r"
+  param_local$meta$script <- "/src/workflow-04/z551_TS_training_strategy.r"
   
   
   param_local$future <- c(202107)
@@ -232,7 +232,7 @@ HT_tuning_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
   
-  param_local$meta$script <- "/src/workflow-03/z561_HT_lightgbm.r"
+  param_local$meta$script <- "/src/workflow-04/z561_HT_lightgbm.r"
   
   # En caso que se haga cross validation, se usa esta cantidad de folds
   param_local$lgb_crossvalidation_folds <- 5
@@ -289,7 +289,7 @@ ZZ_final_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
   
-  param_local$meta$script <- "/src/workflow-03/z571_ZZ_final.r"
+  param_local$meta$script <- "/src/workflow-04/z571_ZZ_final.r"
   
   # Que modelos quiero, segun su posicion en el ranking e la Bayesian Optimizacion, ordenado por ganancia descendente
   param_local$modelos_rank <- c(1)
@@ -304,7 +304,7 @@ ZZ_final_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   param_local$graficar$ventana_suavizado <- 2001L
   
   # Una corrida de Guantes Blancos solo usa 5 semillas
-  param_local$qsemillas <- 5
+  param_local$qsemillas <- 25
   
   return( exp_correr_script( param_local ) ) # linea fija
 }
