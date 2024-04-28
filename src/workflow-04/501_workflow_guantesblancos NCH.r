@@ -116,7 +116,7 @@ DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
 }
 #------------------------------------------------------------------------------
 
-# pmyexp <- "FE0001"
+# pmyexp <- "FE0001"nico
 # pinputexps <- "DR0001"
 # pserver <- "local"
 
@@ -270,10 +270,10 @@ HT_tuning_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
     
     extra_trees = FALSE,
     # White Gloves Bayesian Optimization, with a happy narrow exploration
-    #learning_rate = c( 0.02, 0.8 ),
-    #feature_fraction = c( 0.5, 0.9 ),
-    #num_leaves = c( 300L, 1024L,  "integer" ),
-    #min_data_in_leaf = c( 100L, 2000L, "integer" )
+    learning_rate = 0.03,#c( 0.02, 0.8 ),
+    feature_fraction = 0.6, c( 0.5, 0.9 ),
+    num_leaves = 200, #c( 300L, 1024L,  "integer" ),
+    min_data_in_leaf =500  # c( 100L, 2000L, "integer" )
   )
   
   
