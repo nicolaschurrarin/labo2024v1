@@ -16,9 +16,9 @@ require("ggplot2")
 
 # cambiar aqui los parametros
 PARAM <- list()
-PARAM$minsplit <- 300
-PARAM$minbucket <- 8
-PARAM$maxdepth <- 6
+PARAM$minsplit <- 400
+PARAM$minbucket <- 200
+PARAM$maxdepth <- 3
 
 #------------------------------------------------------------------------------
 # particionar agrega una columna llamada fold a un dataset
@@ -47,15 +47,17 @@ particionar <- function(data, division, agrupa = "", campo = "fold",
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 # Aqui empieza el programa
-
-setwd("~/buckets/b1/") # Establezco el Working Directory
+setwd("C:\\Users\\Nicolas\\OneDrive\\Ciencia de Datos\\Austral_2024_Laboratorio1\\buckets\\b1\\") 
+#setwd("~/buckets/b1/") # Establezco el Working Directory
 
 #cargo MI amada primera semilla, que esta en MI bucket
+#tabla_semillas <- fread( "./datasets//mis_semillas.txt" )
 tabla_semillas <- fread( "./datasets//mis_semillas.txt" )
-ksemilla_azar <- tabla_semillas[ 4, semilla ]  # 1 es mi primera semilla
+ksemilla_azar <- tabla_semillas[ 1, semilla ]  # 1 es mi primera semilla
 
 # cargo el dataset
-dataset <- fread("./datasets/dataset_pequeno.csv")
+#dataset <- fread("./datasets/dataset_pequeno.csv")
+dataset <- fread(".//datasets//dataset_pequeno.csv")
 
 # a partir de ahora solo trabajo con 202107, el mes que tiene clase
 dataset <- dataset[foto_mes == 202107] # defino donde voy a entrenar
@@ -103,13 +105,20 @@ dataset[, pos := sequence(.N), by = fold]
 # Esta hermosa curva muestra como en el mentiroso training
 #   la ganancia es siempre mejor que en el real testing
 # segundo grafico solo los primeros 20k enviso
+titulo <- paste("semilla:", ksemilla_azar, 
+                "MinSplit:", PARAM$minsplit,
+                "MinBucket:", PARAM$minbucket,
+                "MaxDepth:", PARAM$maxdepth)
+
+
 gra <- ggplot(
            data = dataset[pos <= 20000],
            aes( x = pos, y = ganancia_acumulada,
                 color = ifelse(fold == 1, "train", "test") )
-             ) + geom_line() + ggtitle(ksemilla_azar)
+             ) + geom_line() + ggtitle(titulo)
 
 print( gra )
 
 cat( "Train gan max: ", dataset[fold==1, max(ganancia_acumulada)], "\n" )
 cat( "Test  gan max: ", dataset[fold==2, max(ganancia_acumulada)], "\n" )
+
