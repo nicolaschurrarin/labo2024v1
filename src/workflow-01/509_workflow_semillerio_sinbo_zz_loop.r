@@ -288,7 +288,7 @@ ZZ_final_semillerio_baseline <- function( pmyexp, pinputexps,hiperparametros, fu
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
 
-  #cambio por la versión modificada de ZZ_final
+  #cambio por la versión modificada de ZZ_finaldata:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAWElEQVR42mNgGPTAxsZmJsVqQApgmGw1yApwKcQiT7phRBuCzzCSDSHGMKINIeDNmWQlA2IigKJwIssQkHdINgxfmBBtGDEBS3KCxBc7pMQgMYE5c/AXPwAwSX4lV3pTWwAAAABJRU5ErkJggg==
   param_local$meta$script <- "/src/workflow-01/881_ZZ_final_semillerio.r"
 
   # Que modelos quiero, segun su posicion en el ranking e la Bayesian Optimizacion, ordenado por ganancia descendente
@@ -416,7 +416,7 @@ corrida_baseline_semillerio_202107 <- function( pnombrewf, pvirgen=FALSE )
 
 
 corrida_baseline_semillerio_202109( "basem01-zz-01" )
-
+cat("¡Script finalizado!\n")
 
 # Luego partiendo de  FE0001
 # genero TS0002, HT0002 y ZZ0002
