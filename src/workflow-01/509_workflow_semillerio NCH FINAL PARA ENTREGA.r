@@ -1,5 +1,4 @@
-# Corrida general del Workflow de Guantes Blancos
-# para aprender lo conceptual, sin ensuciarse las manos
+# Corrida general del Workflow de semillerio
 
 # limpio la memoria
 rm(list = ls(all.names = TRUE)) # remove all objects
@@ -14,9 +13,9 @@ require("ParamHelpers")
 envg <- env()
 
 envg$EXPENV <- list()
-envg$EXPENV$exp_dir <- "~/buckets/b1/exp/flow2/"
-envg$EXPENV$wf_dir <- "~/buckets/b1/flow2/"
-envg$EXPENV$wf_dir_local <- "~/flow2/"
+envg$EXPENV$exp_dir <- "~/buckets/b1/exp/"
+envg$EXPENV$wf_dir <- "~/buckets/b1/flow/"
+envg$EXPENV$wf_dir_local <- "~/flow/"
 envg$EXPENV$repo_dir <- "~/labo2024v1/"
 envg$EXPENV$datasets_dir <- "~/buckets/b1/datasets/"
 envg$EXPENV$arch_sem <- "mis_semillas.txt"
@@ -55,16 +54,12 @@ source( exp_lib )
 
 #------------------------------------------------------------------------------
 
-# pmyexp <- "DT0002"
-# parch <- "competencia_2024.csv.gz"
-# pserver <- "local"
-
-DT_incorporar_dataset_default <- function( pmyexp, parch, pserver="local")
+DT_incorporar_dataset_baseline <- function( pmyexp, parch, pserver="local")
 {
   if( -1 == (param_local <- exp_init_datos( pmyexp, parch, pserver ))$resultado ) return( 0 )# linea fija
   
   
-  param_local$meta$script <- "/src/workflow-02/z511_DT_incorporar_dataset.r"
+  param_local$meta$script <- "/src/workflow-01/z511_DT_incorporar_dataset.r"
   
   param_local$primarykey <- c("numero_de_cliente", "foto_mes" )
   param_local$entity_id <- c("numero_de_cliente" )
@@ -74,17 +69,14 @@ DT_incorporar_dataset_default <- function( pmyexp, parch, pserver="local")
   return( exp_correr_script( param_local ) ) # linea fija}
 }
 #------------------------------------------------------------------------------
+# Catastrophe Analysis  baseline
 
-# pmyexp <- "CA0001"
-# pinputexps <- "DT0002"
-# pserver <- "local"
-
-CA_catastrophe_default <- function( pmyexp, pinputexps, pserver="local")
+CA_catastrophe_baseline <- function( pmyexp, pinputexps, pserver="local")
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
   
   
-  param_local$meta$script <- "/src/workflow-02/z521_CA_reparar_dataset.r"
+  param_local$meta$script <- "/src/workflow-01/z521_CA_reparar_dataset.r"
   
   # Opciones MachineLearning EstadisticaClasica Ninguno
   param_local$metodo <- "MachineLearning" # MachineLearning EstadisticaClasica Ninguno
@@ -92,47 +84,39 @@ CA_catastrophe_default <- function( pmyexp, pinputexps, pserver="local")
   return( exp_correr_script( param_local ) ) # linea fija}
 }
 #------------------------------------------------------------------------------
-# Data Drifting de Guantes Blancos
+# Data Drifting baseline
 
-
-# pmyexp <- "DR0001"
-# pinputexps <- "CA0001"
-# pserver <- "local"
-
-DR_drifting_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
+DR_drifting_baseline <- function( pmyexp, pinputexps, pserver="local")
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
   
   
-  param_local$meta$script <- "/src/workflow-02/z531_DR_corregir_drifting.r"
+  param_local$meta$script <- "/src/workflow-01/531_DR_corregir_drifting_usd.r"
   
   # No me engraso las manos con Feature Engineering manual
-  param_local$variables_intrames <- FALSE
+  param_local$variables_intrames <- TRUE
   # valores posibles
   #  "ninguno", "rank_simple", "rank_cero_fijo", "deflacion", "estandarizar"
-  param_local$metodo <- "rank_cero_fijo"
+  param_local$metodo <- "deflacion_usd"
   
   return( exp_correr_script( param_local ) ) # linea fija
 }
 #------------------------------------------------------------------------------
+# FE historia baseline
 
-# pmyexp <- "FE0001"
-# pinputexps <- "DR0001"
-# pserver <- "local"
-
-FE_historia_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
+FE_historia_baseline <- function( pmyexp, pinputexps, pserver="local")
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
   
   
-  param_local$meta$script <- "/src/workflow-02/z541_FE_historia.r"
+  param_local$meta$script <- "/src/workflow-01/z541_FE_historia.r"
   
   param_local$lag1 <- TRUE
-  param_local$lag2 <- FALSE # no me engraso con los lags de orden 2
-  param_local$lag3 <- FALSE # no me engraso con los lags de orden 3
+  param_local$lag2 <- TRUE # no me engraso con los lags de orden 2
+  param_local$lag3 <- TRUE # no me engraso con los lags de orden 3
   
-  # no me engraso las manos con las tendencias
-  param_local$Tendencias1$run <- FALSE  # FALSE, no corre nada de lo que sigue
+  # baseline
+  param_local$Tendencias1$run <- TRUE  # FALSE, no corre nada de lo que sigue
   param_local$Tendencias1$ventana <- 6
   param_local$Tendencias1$tendencia <- TRUE
   param_local$Tendencias1$minimo <- FALSE
@@ -141,8 +125,8 @@ FE_historia_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   param_local$Tendencias1$ratioavg <- FALSE
   param_local$Tendencias1$ratiomax <- FALSE
   
-  # no me engraso las manos con las tendencias de segundo orden
-  param_local$Tendencias2$run <- FALSE
+  # baseline
+  param_local$Tendencias2$run <- TRUE
   param_local$Tendencias2$ventana <- 6
   param_local$Tendencias2$tendencia <- TRUE
   param_local$Tendencias2$minimo <- FALSE
@@ -152,89 +136,86 @@ FE_historia_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   param_local$Tendencias2$ratiomax <- FALSE
   
   
-  # No me engraso las manos con las variables nuevas agregadas por un RF
-  # esta parte demora mucho tiempo en correr, y estoy en modo manos_limpias
-  param_local$RandomForest$run <- FALSE
+  # vaseline
+  param_local$RandomForest$run <- TRUE
   param_local$RandomForest$num.trees <- 20
   param_local$RandomForest$max.depth <- 4
   param_local$RandomForest$min.node.size <- 1000
   param_local$RandomForest$mtry <- 40
   
-  # no me engraso las manos con los Canaritos Asesinos
   # varia de 0.0 a 2.0, si es 0.0 NO se activan
-  param_local$CanaritosAsesinos$ratio <- 0.0
+  param_local$CanaritosAsesinos$ratio <- 2
   # desvios estandar de la media, para el cutoff
-  param_local$CanaritosAsesinos$desvios <- 4.0
+  param_local$CanaritosAsesinos$desvios <- 0.75
   
   return( exp_correr_script( param_local ) ) # linea fija
 }
 #------------------------------------------------------------------------------
-# Training Strategy de Guantes Blancos
-#   entreno en solo tres meses   ( mas guantes blancos no se puede )
-#   y solo incluyo en el dataset al 5% de los CONTINUA
+# Training Strategy baseline 202109
 
-TS_strategy_guantesblancos_202109 <- function( pmyexp, pinputexps, pserver="local")
+TS_strategy_baseline_202109 <- function( pmyexp, pinputexps, pserver="local")
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
   
-  param_local$meta$script <- "/src/workflow-02/z551_TS_training_strategy.r"
-  
-  
+  param_local$meta$script <- "/src/workflow-01/z551_TS_training_strategy.r"
+
   param_local$future <- c(202109)
   
-  param_local$final_train <- c(201905,201906,201907,201908,201909,201910,201911,201912,202001,202002,202003,202011,202012,202101,
-                               202102, 202103,202104,202105,202106, 202107)
+  param_local$final_train <- c(201905,201906,201907,201908,201909,201910,201911,201912,
+                               202001,202002,202003,202011,202012,
+                               202101,202102,202103,202104,202105,202106,202107)
   
   
-  param_local$train$training <- c(201905,201906,201907,201908,201909,201910,201911,201912,202001,202002,
-                                  202003,202004,202005,202006,202007,202008,202009,202010,202011,202012,202105,
-                                  202104, 202103,202102,202101)
+  param_local$train$training <- c(201904,201903,201905,201906,201907,201908,201909,201910,201911,201912,
+                                  202001,202002,202003,202011,202012,
+                                  202101,202102,202103,202104,202105)
+  
   param_local$train$validation <- c(202106)
   param_local$train$testing <- c(202107)
   
-  # Atencion  0.1  de  undersampling de la clase mayoritaria,  los CONTINUA
-  # 1.0 significa NO undersampling ,  0.1  es quedarse con el 10% de los CONTINUA
-  param_local$train$undersampling <- 0.1
+  
+  # undersampling  baseline
+  param_local$train$undersampling <- 0.3
   
   return( exp_correr_script( param_local ) ) # linea fija
 }
-#------------------------------------------------------------------------------
-# Training Strategy de Guantes Blancos
-#   entreno en solo tres meses ( mas guantes blancos no se puede )
-#   y solo incluyo en el dataset al 5% de los CONTINUA
 
-TS_strategy_guantesblancos_202107 <- function( pmyexp, pinputexps, pserver="local")
+
+#------------------------------------------------------------------------------
+# Training Strategy baseline  202107
+
+# TS_strategy_baseline_202107 <- function( pmyexp, pinputexps, pserver="local")
+# {
+#   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
+#   
+#   param_local$meta$script <- "/src/workflow-01/z551_TS_training_strategy.r"
+#   
+#   
+#   param_local$future <- c(202109)
+#   param_local$final_train <- c(201905,201906,201907,201908,201909,201910,201911,201912,202001,202002,202003,202011,202012,202101,
+#                                202102, 202103,202104,202105,202106, 202107)
+#   
+#   
+#   param_local$train$training <- c(202103,202104,201905,201906,201907,201908,201909,201910,201911,201912,202001,202002,202003,202011,202012,202101,
+#                                   202102, 202103,202104,202105)
+#   
+#   param_local$train$validation <- c(202106)
+#   param_local$train$testing <- c(202107)
+#   
+#   
+#   # undersampling  baseline
+#   param_local$train$undersampling <- 0.3
+#   
+#   return( exp_correr_script( param_local ) ) # linea fija
+# }
+#------------------------------------------------------------------------------
+# Hyperparamteter Tuning baseline
+
+HT_tuning_baseline <- function( pmyexp, pinputexps, pserver="local")
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
   
-  param_local$meta$script <- "/src/workflow-02/z551_TS_training_strategy.r"
-  
-  
-  param_local$future <- c(202107)
-  param_local$final_train <- c(202105, 202104, 202103)
-  
-  
-  param_local$train$training <- c(202103, 202102, 202101)
-  param_local$train$validation <- c(202104)
-  param_local$train$testing <- c(202105)
-  
-  # Atencion  0.1  de  undersampling de la clase mayoritaria,  los CONTINUA
-  # 1.0 significa NO undersampling ,  0.1  es quedarse con el 10% de los CONTINUA
-  param_local$train$undersampling <- 0.1
-  
-  return( exp_correr_script( param_local ) ) # linea fija
-}
-#------------------------------------------------------------------------------
-
-# Hyperparamteter Tuning de Guantes Blancos
-#  donde la Bayuesian Optimization solo considera 4 hiperparámetros
-#  y apenas se hacen 15 iteraciones inteligentes
-
-HT_tuning_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
-{
-  if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
-  
-  param_local$meta$script <- "/src/workflow-02/z561_HT_lightgbm.r"
+  param_local$meta$script <- "/src/workflow-01/z561_HT_lightgbm.r"
   
   # En caso que se haga cross validation, se usa esta cantidad de folds
   param_local$lgb_crossvalidation_folds <- 5
@@ -271,33 +252,33 @@ HT_tuning_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
     skip_drop = 0.5, # 0.0 <= skip_drop <= 1.0
     
     extra_trees = FALSE,
-    # White Gloves Bayesian Optimization, with a happy narrow exploration
-    learning_rate = c( 0.02, 0.8 ),
+    # Quasi  baseline, el minimo learning_rate es 0.02 !!
+    learning_rate = c( 0.02, 0.5 ),
     feature_fraction = c( 0.5, 0.9 ),
-    num_leaves = c( 300L, 1024L,  "integer" ),
+    num_leaves = c( 8L, 2048L,  "integer" ),
     min_data_in_leaf = c( 100L, 2000L, "integer" )
   )
   
   
   # una Beyesian de Guantes Blancos, solo hace 15 iteraciones
-  param_local$bo_iteraciones <- 15 # iteraciones de la Optimizacion Bayesiana
+  param_local$bo_iteraciones <- 100 # iteraciones de la Optimizacion Bayesiana
   
   return( exp_correr_script( param_local ) ) # linea fija
 }
 #------------------------------------------------------------------------------
-# proceso ZZ_final  de Guantes Blancos
+# proceso ZZ_final  baseline
 
-ZZ_final_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
+ZZ_final_baseline <- function( pmyexp, pinputexps, pserver="local")
 {
   if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
   
-  param_local$meta$script <- "/src/workflow-02/z571_ZZ_final.r"
+  param_local$meta$script <- "/src/workflow-01/z571_ZZ_final.r"
   
   # Que modelos quiero, segun su posicion en el ranking e la Bayesian Optimizacion, ordenado por ganancia descendente
   param_local$modelos_rank <- c(1)
   
-  param_local$kaggle$envios_desde <-  9500L
-  param_local$kaggle$envios_hasta <- 11500L
+  param_local$kaggle$envios_desde <-  10000L
+  param_local$kaggle$envios_hasta <- 14500L
   param_local$kaggle$envios_salto <-   500L
   
   # para el caso que deba graficar
@@ -311,92 +292,100 @@ ZZ_final_guantesblancos <- function( pmyexp, pinputexps, pserver="local")
   return( exp_correr_script( param_local ) ) # linea fija
 }
 #------------------------------------------------------------------------------
+# proceso ZZ_final  baseline
+
+ZZ_final_semillerio_baseline <- function( pmyexp, pinputexps, pserver="local")
+{
+  if( -1 == (param_local <- exp_init( pmyexp, pinputexps, pserver ))$resultado ) return( 0 )# linea fija
+  
+  param_local$meta$script <- "/src/workflow-01/z881_ZZ_final_semillerio.r"
+  
+  # Que modelos quiero, segun su posicion en el ranking e la Bayesian Optimizacion, ordenado por ganancia descendente
+  param_local$modelos_rank <- c(1)
+  
+  param_local$kaggle$envios_desde <-  10000L
+  param_local$kaggle$envios_hasta <- 14500L
+  param_local$kaggle$envios_salto <-   500L
+  
+  # para el caso que deba graficar
+  param_local$graficar$envios_desde <-  8000L
+  param_local$graficar$envios_hasta <- 20000L
+  param_local$graficar$ventana_suavizado <- 2001L
+  
+  # El parametro fundamental de semillerio
+  # Es la cantidad de LightGBM's que ensamblo
+  param_local$semillerio <- 20
+  
+  return( exp_correr_script( param_local ) ) # linea fija
+}
 #------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+
 # A partir de ahora comienza la seccion de Workflows Completos
 #------------------------------------------------------------------------------
-# Este es el  Workflow de Guantes Blancos
+# Este es el  Workflow baseline con semillerio
 # Que predice 202109
 # y ya genera archivos para Kaggle
 
-corrida_guantesblancos_202109 <- function( pnombrewf, pvirgen=FALSE )
+corrida_baseline_semillerio_202109 <- function( pnombrewf, pvirgen=FALSE )
 {
   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
   
-  DT_incorporar_dataset_default( "DT0001", "competencia_2024.csv.gz")
-  CA_catastrophe_default( "CA0001", "DT0001" )
+  DT_incorporar_dataset_baseline( "DT0001-sem-final", "competencia_2024.csv.gz")
+  CA_catastrophe_baseline( "CA0001-sem-final", "DT0001-sem-final" )
   
-  DR_drifting_guantesblancos( "DR0001", "CA0001" )
-  FE_historia_guantesblancos( "FE0001", "DR0001" )
+  DR_drifting_baseline( "DR0001-sem-final", "CA0001-sem-final" )
+  FE_historia_baseline( "FE0001-sem-final", "DR0001-sem-final" )
   
-  TS_strategy_guantesblancos_202109( "TS0001", "FE0001" )
+  TS_strategy_baseline_202109( "TS0001-sem-final", "FE0001-sem-final" )
   
-  HT_tuning_guantesblancos( "HT0001", "TS0001" )
+  HT_tuning_baseline( "HT0001-sem-final", "TS0001-sem-final" )
   
   # El ZZ depente de HT y TS
-  ZZ_final_guantesblancos( "ZZ0001", c("HT0001","TS0001") )
+  ZZ_final_semillerio_baseline( "ZZ0001-sem-final", c("HT0001-sem-final","TS0001-sem-final") )
   
   
   exp_wf_end( pnombrewf, pvirgen ) # linea fija
 }
 #------------------------------------------------------------------------------
-# Este es el  Workflow de Guantes Blancos
+# Este es el  Workflow baseline con semillerio
 # Que predice 202107
 # genera completas curvas de ganancia
 #   NO genera archivos para Kaggle
 # por favor notal como este script parte de FE0001
 
-corrida_guantesblancos_202107 <- function( pnombrewf, pvirgen=FALSE )
-{
-  if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
-  
-  # Ya tengo corrido FE0001 y parto de alli
-  TS_strategy_guantesblancos_202107( "TS0002", "FE0001" )
-  
-  HT_tuning_guantesblancos( "HT0002", "TS0002" )
-  
-  # El ZZ depente de HT y TS
-  ZZ_final_guantesblancos( "ZZ0002", c("HT0002", "TS0002") )
-  
-  
-  exp_wf_end( pnombrewf, pvirgen ) # linea fija
-}
-#------------------------------------------------------------------------------
-#------------------------------------------------------------------------------
+# 
+# corrida_baseline_semillerio_202107 <- function( pnombrewf, pvirgen=FALSE )
+# {
+#   if( -1 == exp_wf_init( pnombrewf, pvirgen) ) return(0) # linea fija
+#   
+#   DT_incorporar_dataset_baseline( "DT0001-sem", "competencia_2024.csv.gz")
+#   CA_catastrophe_baseline( "CA0001-sem", "DT0001-sem" )
+#   
+#   DR_drifting_baseline( "DR0001-sem", "CA0001-sem" )
+#   FE_historia_baseline( "FE0001-sem", "DR0001-sem" )
+#   
+#   TS_strategy_baseline_202107( "TS0002-sem", "FE0001-sem" )
+#   
+#   HT_tuning_baseline( "HT0002-sem", "TS0002-sem" )
+#   
+#   # El ZZ depente de HT y TS
+#   ZZ_final_semillerio_baseline( "ZZ0002-sem", c("HT0002-sem","TS0002-sem") )
+#   
+#   
+#   exp_wf_end( pnombrewf, pvirgen ) # linea fija
+# }
 
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 #Aqui empieza el programa
 
-# Obtener la fecha y hora de inicio del proceso
-fecha_hora_inicio <- Sys.time()
 
-
-# Hago primero esta corrida que me genera los experimentos
-# DT0001, CA0001, DR0001, FE0001, TS0001, HT0001 y ZZ0001
-corrida_guantesblancos_202109( "gb01" )
+corrida_baseline_semillerio_202109( "basem01-final" )
 
 
 # Luego partiendo de  FE0001
 # genero TS0002, HT0002 y ZZ0002
 
-corrida_guantesblancos_202107( "gb02" )
-
-
-# Obtener la fecha y hora de finalización del proceso
-fecha_hora_fin <- Sys.time()
-
-# Crear una cadena con la información de las fechas y horas
-info_proceso <- paste("Inicio:", fecha_hora_inicio, "\nFin:", fecha_hora_fin)
-
-# Especificar el nombre del archivo de salida
-nombre_archivo <- "registro_proceso workflow02.txt"
-
-# Guardar la información en el archivo
-writeLines(info_proceso, nombre_archivo)
-
-# Imprimir un mensaje de confirmación
-cat("La información se ha guardado en", nombre_archivo, "\n")
-
-
-
-
-
+#corrida_baseline_semillerio_202107( "basem02" )
 

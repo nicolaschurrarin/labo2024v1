@@ -144,9 +144,11 @@ FE_historia_baseline <- function( pmyexp, pinputexps, pserver="local")
   param_local$RandomForest$mtry <- 40
   
   # varia de 0.0 a 2.0, si es 0.0 NO se activan
-  param_local$CanaritosAsesinos$ratio <- 0.0
+  
+  #CAMBIO SUGERIDO POR EL GRUPO EXPERIMENTAL
+  param_local$CanaritosAsesinos$ratio <- 2
   # desvios estandar de la media, para el cutoff
-  param_local$CanaritosAsesinos$desvios <- 4.0
+  param_local$CanaritosAsesinos$desvios <- 0.75
   
   return( exp_correr_script( param_local ) ) # linea fija
 }
